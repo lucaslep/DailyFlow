@@ -1,21 +1,51 @@
-```http
 ### Listar todas as tarefas
 GET http://localhost:3333/tasks
 
 ###
 
-### Buscar uma tarefa pelo ID
-GET http://localhost:3333/tasks/1
-
-###
-
-### Criar uma nova tarefa
+### Criar tarefa de prioridade alta
 POST http://localhost:3333/tasks
 Content-Type: application/json
 
 {
-  "title": "Aprender PostgreSQL"
+  "title": "Criar frontend em React",
+  "description": "Criar a interface do Productivity Manager",
+  "status": "TODO",
+  "priority": "HIGH",
+  "dueDate": "2026-09-30"
 }
+
+###
+
+### Criar tarefa em andamento
+POST http://localhost:3333/tasks
+Content-Type: application/json
+
+{
+  "title": "Estudar Prisma",
+  "description": "Aprender relacionamentos e migrations",
+  "status": "IN_PROGRESS",
+  "priority": "MEDIUM",
+  "dueDate": "2026-09-25"
+}
+
+###
+
+### Criar tarefa de prioridade baixa
+POST http://localhost:3333/tasks
+Content-Type: application/json
+
+{
+  "title": "Melhorar README",
+  "description": "Documentar o projeto no GitHub",
+  "status": "TODO",
+  "priority": "LOW"
+}
+
+###
+
+### Buscar uma tarefa
+GET http://localhost:3333/tasks/1
 
 ###
 
@@ -24,32 +54,39 @@ PUT http://localhost:3333/tasks/1
 Content-Type: application/json
 
 {
-  "title": "Estudar Node.js e Express",
-  "completed": true
+  "title": "Criar frontend em React",
+  "description": "Criar dashboard principal",
+  "status": "IN_PROGRESS",
+  "priority": "HIGH",
+  "dueDate": "2026-09-30"
 }
 
 ###
 
-### Buscar novamente a tarefa atualizada
+### Marcar tarefa como concluída
+PUT http://localhost:3333/tasks/1
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+###
+
+### Conferir tarefa concluída
 GET http://localhost:3333/tasks/1
 
 ###
 
-### Listar todas as tarefas novamente
+### Listar todas
 GET http://localhost:3333/tasks
 
 ###
 
-### Excluir uma tarefa
-DELETE http://localhost:3333/tasks/2
+### Excluir tarefa
+DELETE http://localhost:3333/tasks/3
 
 ###
 
-### Conferir se a tarefa foi removida
+### Conferir depois da exclusão
 GET http://localhost:3333/tasks
-
-###
-
-### Testar tarefa inexistente
-GET http://localhost:3333/tasks/999
-```

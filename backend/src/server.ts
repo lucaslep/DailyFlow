@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (request, response) => {
-  response.json({
+  return response.json({
     message: "Productivity Manager API funcionando 🚀",
   });
 });
