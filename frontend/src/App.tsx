@@ -13,6 +13,9 @@ function Icon({ children, size = 20 }: { children: ReactNode; size?: number }) {
 }
 
 function App() {
+  const [theme, setTheme] = useState<"light" | "dark">(() =>
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+  );
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -44,6 +47,12 @@ function App() {
   }
 
   useEffect(() => { void loadTasks(); }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem("focus-theme", theme);
+  }, [theme]);
 
   function clearForm() {
     setTitle(""); setDescription(""); setStatus("TODO"); setPriority("MEDIUM"); setDueDate(""); setEditingTask(null);
@@ -87,7 +96,23 @@ function App() {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand"><div className="brand-mark"><Icon size={23}><path d="m7 12 3 3 7-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></Icon></div><div><strong>Focus</strong><span>Workspace</span></div></div>
-        <div className="today-chip"><Icon size={17}><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" /></Icon>{new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "long" }).format(new Date())}</div>
+        <div className="header-actions">
+          <div className="today-chip"><Icon size={17}><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" /></Icon>{new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "long" }).format(new Date())}</div>
+          <button
+            aria-label={theme === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
+            aria-pressed={theme === "dark"}
+            className="theme-toggle"
+            onClick={() => setTheme((current) => current === "light" ? "dark" : "light")}
+            title={theme === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
+            type="button"
+          >
+            <span className="theme-toggle-track">
+              <span className="theme-toggle-icon sun"><Icon size={16}><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" /></Icon></span>
+              <span className="theme-toggle-icon moon"><Icon size={15}><path d="M20 15.2A8 8 0 0 1 8.8 4 8 8 0 1 0 20 15.2Z" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" /></Icon></span>
+              <span className="theme-toggle-thumb" />
+            </span>
+          </button>
+        </div>
       </header>
 
       <main className="dashboard">

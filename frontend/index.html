@@ -8,6 +8,13 @@
     <title>Focus Workspace</title>
   </head>
   <body>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("focus-theme");
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme = savedTheme ?? (systemDark ? "dark" : "light");
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
