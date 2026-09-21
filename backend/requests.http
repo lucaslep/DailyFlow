@@ -1,0 +1,55 @@
+```http
+### Listar todas as tarefas
+GET http://localhost:3333/tasks
+
+###
+
+### Buscar uma tarefa pelo ID
+GET http://localhost:3333/tasks/1
+
+###
+
+### Criar uma nova tarefa
+POST http://localhost:3333/tasks
+Content-Type: application/json
+
+{
+  "title": "Aprender PostgreSQL"
+}
+
+###
+
+### Atualizar uma tarefa
+PUT http://localhost:3333/tasks/1
+Content-Type: application/json
+
+{
+  "title": "Estudar Node.js e Express",
+  "completed": true
+}
+
+###
+
+### Buscar novamente a tarefa atualizada
+GET http://localhost:3333/tasks/1
+
+###
+
+### Listar todas as tarefas novamente
+GET http://localhost:3333/tasks
+
+###
+
+### Excluir uma tarefa
+DELETE http://localhost:3333/tasks/2
+
+###
+
+### Conferir se a tarefa foi removida
+GET http://localhost:3333/tasks
+
+###
+
+### Testar tarefa inexistente
+GET http://localhost:3333/tasks/999
+```
