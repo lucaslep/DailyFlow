@@ -1,170 +1,88 @@
 # TaskPulse
 
-TaskPulse é uma aplicação de gerenciamento de tarefas focada em produtividade. O projeto permite criar, editar, concluir e excluir tarefas, além de definir prioridades, status e prazos.
+Aplicação full-stack para gerenciamento de tarefas e acompanhamento de produtividade.
 
-A aplicação foi desenvolvida com React, Node.js, TypeScript, Express, Prisma e PostgreSQL. Futuramente, também contará com Python para análise de produtividade e geração de métricas.
+## Funcionalidades
 
-## 🚀 Tecnologias
+- Cadastro e login com senha criptografada e JWT
+- Sessão protegida por cookie `HttpOnly`
+- Recuperação de senha por e-mail
+- Administração e bloqueio de usuários
+- Proteção contra excesso de tentativas e headers de segurança
+- Tarefas isoladas por usuário
+- Criação, edição, conclusão e exclusão de tarefas
+- Prioridades, status e prazos
+- Dashboard com totais, tarefas atrasadas e taxa de conclusão
+- Tema claro e escuro
+- Ambiente completo com Docker Compose
+- Blueprint para deploy no Render
 
-Frontend:
-- React
-- TypeScript
-- Vite
-- CSS
+## Tecnologias
 
-Backend:
-- Node.js
-- Express
-- TypeScript
-- Prisma ORM
+- React 19, TypeScript e Vite
+- Node.js, Express e TypeScript
+- Prisma ORM e PostgreSQL 17
+- bcryptjs e jose
+- Docker, Nginx e Render Blueprint
 
-Banco de dados:
-- PostgreSQL
+## Execução local
 
-Planejado:
-- Python
-- FastAPI
-- Pandas
-- Docker
+### Sem Docker
 
-## 📌 Funcionalidades
+Crie `backend/.env` a partir de `backend/.env.example` e configure o PostgreSQL.
 
-O TaskPulse permite:
-
-- Criar tarefas
-- Editar tarefas
-- Excluir tarefas
-- Marcar tarefas como concluídas
-- Definir prioridade
-- Definir status
-- Definir prazo de conclusão
-- Persistir os dados no PostgreSQL
-
-Os status disponíveis são:
-
-```text
-TODO
-IN_PROGRESS
-DONE
-```
-
-As prioridades disponíveis são:
-
-LOW
-MEDIUM
-HIGH
-
-🧱 Estrutura
-taskpulse/
-│
-├── backend/
-│   ├── prisma/
-│   │   └── schema.prisma
-│   │
-│   └── src/
-│       ├── database/
-│       │   └── prisma.ts
-│       ├── routes/
-│       │   └── task.routes.ts
-│       └── server.ts
-│
-└── frontend/
-    └── src/
-        ├── services/
-        │   └── api.ts
-        ├── types/
-        │   └── Task.ts
-        ├── App.tsx
-        ├── App.css
-        └── main.tsx
-
-Arquitetura atual:
-
-React
-  ↓
-Node.js + Express
-  ↓
-Prisma
-  ↓
-PostgreSQL
-
-Arquitetura planejada:
-
-React
-  ↓
-Node.js + Express
-  ↓
-PostgreSQL
-  ↓
-Python Analytics
-
-⚙️ Como executar
-
-Clone o projeto:
-
-git clone SEU_LINK_DO_REPOSITORIO
-cd taskpulse
-
-Configure o backend:
-
+```powershell
 cd backend
 npm install
-
-Crie um arquivo .env:
-
-DATABASE_URL="postgresql://postgres:masterkey@localhost:5432/productivity_manager?schema=public"
-
-Execute as migrations:
-
-npx prisma migrate dev
-npx prisma generate
-
-Inicie o backend:
-
+npm exec prisma migrate deploy
 npm run dev
+```
 
-Em outro terminal, inicie o frontend:
+Em outro terminal:
 
+```powershell
 cd frontend
 npm install
 npm run dev
+```
 
-A aplicação estará disponível normalmente em:
+- Frontend: http://localhost:5173
+- API: http://localhost:3333
+- Saúde da API: http://localhost:3333/health
 
-Frontend: http://localhost:5173
-Backend:  http://localhost:3333
+### Com Docker
 
-Importante: não envie o arquivo .env para o GitHub.
+Opcionalmente, crie `.env` na raiz a partir de `.env.example`. Depois execute:
 
-📈 Status e próximos passos
+```powershell
+docker compose up --build
+```
 
-Status atual:
+- Aplicação: http://localhost:8080
+- API: http://localhost:3333
 
-Node.js       ✅
-TypeScript    ✅
-Express       ✅
-PostgreSQL    ✅
-Prisma        ✅
-React         ✅
-CRUD          ✅
-Python        ⏳
-Dashboard     ⏳
-Autenticação  ⏳
-Docker        ⏳
-Deploy        ⏳
+## Deploy no Render
 
-Próximas funcionalidades planejadas:
+O arquivo `render.yaml` cria uma aplicação web e um PostgreSQL gerenciado. No painel do Render:
 
-Dashboard de produtividade
-Filtros por prioridade e status
-Tarefas atrasadas
-Taxa de conclusão
-Gráficos de produtividade
-Autenticação com JWT
-Projetos e categorias
-Análise de dados com Python
-Docker
-Testes automatizados
-Deploy
+1. Envie o repositório para um provedor Git compatível.
+2. Crie um novo Blueprint apontando para o repositório.
+3. Confirme os recursos encontrados no `render.yaml`.
+4. Inicie o deploy.
 
-Desenvolvido por Lucas Lepore como projeto de estudo e portfólio.
+O deploy executa as migrations automaticamente antes de iniciar a aplicação. O segredo JWT é gerado pela própria plataforma e o banco não aceita conexões externas.
+
+Consulte [docs/PRODUCAO.md](docs/PRODUCAO.md) para configurar e homologar uma entrega para cliente.
+
+## Variáveis de ambiente
+
+Backend:
+
+- `DATABASE_URL`: conexão PostgreSQL.
+- `JWT_SECRET`: segredo com pelo menos 32 caracteres.
+- `PORT`: porta HTTP; padrão `3333`.
+- `CORS_ORIGIN`: origens permitidas, separadas por vírgula.
+
+Frontend:
+
+- `VITE_API_URL`: endereço da API. Quando vazio, usa a mesma origem da página.

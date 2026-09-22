@@ -1,10 +1,15 @@
 import { Router } from "express";
+import { requireAuthentication } from "../auth.js";
 import { prisma } from "../database/prisma.js";
 
 export const taskRoutes = Router();
 
+taskRoutes.use(requireAuthentication);
+
 taskRoutes.get("/", async (request, response) => {
+  const { userId } = request;
   const tasks = await prisma.task.findMany({
+    where: { userId },
     orderBy: {
       createdAt: "desc",
     },
@@ -14,6 +19,7 @@ taskRoutes.get("/", async (request, response) => {
 });
 
 taskRoutes.get("/:id", async (request, response) => {
+  const { userId } = request;
   const { id } = request.params;
 
   const taskId = Number(id);
@@ -24,9 +30,10 @@ taskRoutes.get("/:id", async (request, response) => {
     });
   }
 
-  const task = await prisma.task.findUnique({
+  const task = await prisma.task.findFirst({
     where: {
       id: taskId,
+      userId,
     },
   });
 
@@ -40,6 +47,7 @@ taskRoutes.get("/:id", async (request, response) => {
 });
 
 taskRoutes.post("/", async (request, response) => {
+  const { userId } = request;
   const {
     title,
     description,
@@ -65,6 +73,7 @@ taskRoutes.post("/", async (request, response) => {
         status === "DONE"
           ? new Date()
           : null,
+      userId,
     },
   });
 
@@ -72,6 +81,7 @@ taskRoutes.post("/", async (request, response) => {
 });
 
 taskRoutes.put("/:id", async (request, response) => {
+  const { userId } = request;
   const { id } = request.params;
 
   const {
@@ -90,9 +100,10 @@ taskRoutes.put("/:id", async (request, response) => {
     });
   }
 
-  const existingTask = await prisma.task.findUnique({
+  const existingTask = await prisma.task.findFirst({
     where: {
       id: taskId,
+      userId,
     },
   });
 
@@ -131,6 +142,7 @@ taskRoutes.put("/:id", async (request, response) => {
 });
 
 taskRoutes.delete("/:id", async (request, response) => {
+  const { userId } = request;
   const { id } = request.params;
 
   const taskId = Number(id);
@@ -141,9 +153,10 @@ taskRoutes.delete("/:id", async (request, response) => {
     });
   }
 
-  const existingTask = await prisma.task.findUnique({
+  const existingTask = await prisma.task.findFirst({
     where: {
       id: taskId,
+      userId,
     },
   });
 

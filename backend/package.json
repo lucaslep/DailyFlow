@@ -10,7 +10,8 @@
     "dev": "tsx watch src/server.ts",
     "prebuild": "npm run prisma:generate",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test:smoke": "node scripts/smoke-test.mjs"
   },
   "keywords": [],
   "author": "",
@@ -18,15 +19,22 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "pg": "^8.23.0"
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "jose": "^6.2.12",
+    "nodemailer": "^10.0.10",
+    "pg": "^8.23.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.2",
+    "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "prisma": "^7.10.0",
     "tsx": "^4.23.15",

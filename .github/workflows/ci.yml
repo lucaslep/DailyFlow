@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: productivity_manager
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: masterkey
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d productivity_manager"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+      - name: Build backend
+        run: npm run build
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://postgres:masterkey@localhost:5432/productivity_manager
+          JWT_SECRET: ci-secret-containing-at-least-32-characters
+      - name: Test backend flow
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://postgres:masterkey@localhost:5432/productivity_manager
+          JWT_SECRET: ci-secret-containing-at-least-32-characters
+          NODE_ENV: development
+        run: |
+          npx prisma migrate deploy
+          npm start &
+          sleep 3
+          npm run test:smoke
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: frontend
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
