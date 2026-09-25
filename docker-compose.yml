@@ -26,6 +26,12 @@ services:
       ADMIN_EMAILS: ${ADMIN_EMAILS:-admin@taskpulse.local}
       NODE_ENV: development
       PORT: 3333
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
     ports:
       - "3333:3333"
 
