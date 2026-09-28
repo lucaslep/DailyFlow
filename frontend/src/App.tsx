@@ -18,6 +18,7 @@ import {
 } from "./services/api";
 import type { AdminSummary, AdminUser, User } from "./services/api";
 import type { Task, TaskPriority, TaskStatus } from "./types/task";
+import { usePendingFavicon } from "./hooks/usePendingFavicon";
 import "./App.css";
 
 const statusLabels: Record<TaskStatus, string> = { TODO: "Pendente", IN_PROGRESS: "Em andamento", DONE: "Concluída" };
@@ -123,6 +124,8 @@ function App() {
       completionRate: tasks.length ? Math.round((done / tasks.length) * 100) : 0,
     };
   }, [tasks]);
+
+  usePendingFavicon(summary.pending, Boolean(user));
 
   const signOut = useCallback(() => {
     void logout().finally(() => { setUser(null); setTasks([]); });
