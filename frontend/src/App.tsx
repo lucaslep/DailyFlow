@@ -21,7 +21,7 @@ import type { Task, TaskPriority, TaskStatus } from "./types/task";
 import { usePendingFavicon } from "./hooks/usePendingFavicon";
 import "./App.css";
 
-const statusLabels: Record<TaskStatus, string> = { TODO: "Pendente", IN_PROGRESS: "Em andamento", DONE: "Concluída" };
+const statusLabels: Record<TaskStatus, string> = { TODO: "Pendente", IN_PROGRESS: "Em andamento", TESTING: "Em teste", DONE: "Concluída" };
 const priorityLabels: Record<TaskPriority, string> = { LOW: "Baixa", MEDIUM: "Média", HIGH: "Alta" };
 
 function Icon({ children, size = 20 }: { children: ReactNode; size?: number }) {
@@ -119,6 +119,7 @@ function App() {
       total: tasks.length,
       pending: tasks.filter((task) => task.status === "TODO").length,
       inProgress: tasks.filter((task) => task.status === "IN_PROGRESS").length,
+      testing: tasks.filter((task) => task.status === "TESTING").length,
       done,
       overdue: tasks.filter((task) => task.status !== "DONE" && task.dueDate && task.dueDate.slice(0, 10) < today).length,
       completionRate: tasks.length ? Math.round((done / tasks.length) * 100) : 0,
@@ -217,6 +218,7 @@ function App() {
           <SummaryCard className="summary-primary" label="Total de tarefas" value={summary.total} />
           <SummaryCard label="Pendentes" tone="amber" value={summary.pending} />
           <SummaryCard label="Em andamento" tone="blue" value={summary.inProgress} />
+          <SummaryCard label="Em teste" tone="cyan" value={summary.testing} />
           <SummaryCard label="Concluídas" tone="green" value={summary.done} />
           <SummaryCard label="Atrasadas" tone="red" value={summary.overdue} />
           <SummaryCard label="Taxa de conclusão" tone="purple" value={`${summary.completionRate}%`} />
@@ -228,7 +230,7 @@ function App() {
             <form className="task-form" onSubmit={handleSubmit}>
               <label>Título<input maxLength={120} onChange={(event) => setTitle(event.target.value)} placeholder="O que precisa ser feito?" required value={title} /></label>
               <label>Descrição <span>(opcional)</span><textarea onChange={(event) => setDescription(event.target.value)} placeholder="Adicione mais detalhes..." value={description} /></label>
-              <div className="form-row"><label>Status<select onChange={(event) => setStatus(event.target.value as TaskStatus)} value={status}><option value="TODO">Pendente</option><option value="IN_PROGRESS">Em andamento</option><option value="DONE">Concluída</option></select></label><label>Prioridade<select onChange={(event) => setPriority(event.target.value as TaskPriority)} value={priority}><option value="LOW">Baixa</option><option value="MEDIUM">Média</option><option value="HIGH">Alta</option></select></label></div>
+              <div className="form-row"><label>Status<select onChange={(event) => setStatus(event.target.value as TaskStatus)} value={status}><option value="TODO">Pendente</option><option value="IN_PROGRESS">Em andamento</option><option value="TESTING">Em teste</option><option value="DONE">Concluída</option></select></label><label>Prioridade<select onChange={(event) => setPriority(event.target.value as TaskPriority)} value={priority}><option value="LOW">Baixa</option><option value="MEDIUM">Média</option><option value="HIGH">Alta</option></select></label></div>
               <label>Prazo<input onChange={(event) => setDueDate(event.target.value)} type="date" value={dueDate} /></label>
               <button className="primary-button" disabled={saving} type="submit">{saving ? "Salvando..." : editingTask ? "Salvar alterações" : "Criar tarefa"}</button>
               {editingTask && <button className="cancel-button" onClick={clearForm} type="button">Cancelar edição</button>}

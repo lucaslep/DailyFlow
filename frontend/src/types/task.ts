@@ -1,4 +1,4 @@
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
+export type TaskStatus = "TODO" | "IN_PROGRESS" | "TESTING" | "DONE";
 
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 
